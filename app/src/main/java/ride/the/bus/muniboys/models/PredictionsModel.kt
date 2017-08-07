@@ -22,5 +22,9 @@ data class PredictionsModel(val predictions: Predictions) {
                          val seconds: String,
                          val isDeparture: Boolean)
 
+
+    fun getNextPrediction(): Prediction? {
+        return predictions.direction.prediction.getOrNull(0)
+    }
 }
 
