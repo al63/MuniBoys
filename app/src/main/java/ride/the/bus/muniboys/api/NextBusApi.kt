@@ -1,8 +1,7 @@
 package ride.the.bus.muniboys.api
 
-import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.http.GET
+import ride.the.bus.muniboys.models.PredictionsModel
 
 /**
  * Created by aleclee on 8/6/17.
@@ -10,20 +9,10 @@ import retrofit2.http.GET
 
 object NextBusApi {
 
-    private interface NextBusService {
-        @GET("publicJSONFeed?command=predictions&a=sf-muni&r=5&s=4229")
-        fun getPredictions(): Call<String>
+    private val MUNI_AGENCY = "sf-muni"
+    private val mService: NextBusService = RetrofitManager.getRetrofit().create(NextBusService::class.java)
+
+    fun getPredictions(callback: Callback<PredictionsModel>) {
+        mService.getPredictions(MUNI_AGENCY, "5", 5390).enqueue(callback)
     }
-
-    private val mService: NextBusService
-
-    init {
-        mService = RetrofitManager.getRetrofit().create(NextBusService::class.java)
-    }
-
-    fun getPredictions(callback: Callback<String>) {
-        mService.getPredictions().enqueue(callback)
-    }
-
-
 }
