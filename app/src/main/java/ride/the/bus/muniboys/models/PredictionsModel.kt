@@ -20,7 +20,8 @@ data class PredictionsModel(val predictions: Predictions) {
                          val dirTag: String,
                          val minutes: String,
                          val seconds: String,
-                         val isDeparture: Boolean)
+                         val isDeparture: Boolean) {
+    }
 
 
     fun getNextPrediction(): Prediction? {

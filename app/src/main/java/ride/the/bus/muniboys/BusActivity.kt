@@ -28,11 +28,9 @@ class BusActivity : AppCompatActivity() {
                 response?.let {
                     if (it.isSuccessful) {
                         it.body()?.getNextPrediction()?.let {
-                            time = "${it.minutes} ${it.seconds}"
+                            time = it.minutes
                         }
-
                     }
-
                 }
 
                 mText?.let {
