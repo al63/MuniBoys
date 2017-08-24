@@ -1,19 +1,21 @@
 package ride.the.bus.muniboys.models
 
+import com.google.gson.JsonElement
+
 /**
  * Created by aleclee on 8/6/17.
  */
 
 data class PredictionsModel(val predictions: Predictions) {
 
-    data class Predictions(val direction: List<Direction>, // wtf not necessarily a list
+    data class Predictions(val direction: List<Direction>, // TODO: wtf not necessarily a list
                            val agencyTitle: String,
                            val routeTag: String,
                            val routeTitle: String,
                            val stopTag: String,
                            val stopTitle: String)
 
-    data class Direction(val prediction: List<Prediction>, // wtf not necessarily a list
+    data class Direction(val prediction: List<Prediction>, // TODO: wtf not necessarily a list
                          val title: String)
 
     data class Prediction(val block: String,

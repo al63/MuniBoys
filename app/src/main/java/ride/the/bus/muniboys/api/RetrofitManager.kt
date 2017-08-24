@@ -22,7 +22,7 @@ object RetrofitManager {
                 .client(client)
                 .baseUrl("http://webservices.nextbus.com/service/")
                 .addConverterFactory(StringConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .addConverterFactory(GsonConverterFactory.create(GsonManager.getGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }
