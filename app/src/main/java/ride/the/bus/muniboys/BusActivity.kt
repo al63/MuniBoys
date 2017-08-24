@@ -2,11 +2,11 @@ package ride.the.bus.muniboys
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import ride.the.bus.muniboys.api.NextBusApi
 import ride.the.bus.muniboys.models.PredictionsModel
 
@@ -22,27 +22,27 @@ class BusActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        NextBusApi.getPredictions(object : Callback<PredictionsModel> {
-            override fun onResponse(call: Call<PredictionsModel>?, response: Response<PredictionsModel>?) {
-                var time = "dunno"
-                response?.let {
-                    if (it.isSuccessful) {
-                        it.body()?.getNextPrediction()?.let {
-                            time = it.minutes
+        val single = NextBusApi.getPredictions()
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object: SingleObserver<PredictionsModel> {
+                    override fun onSuccess(response: PredictionsModel) {
+                        response.getClosestPrediction()?.let {
+                            val time = it.minutes
+                            mText?.let {
+                                it.text = getString(R.string.coming, time)
+                            }
                         }
                     }
-                }
 
-                mText?.let {
-                    it.text = time
-                }
-            }
+                    override fun onError(e: Throwable) {
+                        mText?.let {
+                            it.text = "dunno"
+                        }
+                    }
 
-            override fun onFailure(call: Call<PredictionsModel>?, t: Throwable?) {
-                mText?.let {
-                    it.text = "error!"
-                }
-            }
-        })
+                    override fun onSubscribe(d: Disposable) {
+                    }
+                })
     }
 }

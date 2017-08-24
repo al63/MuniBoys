@@ -1,6 +1,7 @@
 package ride.the.bus.muniboys.api
 
-import retrofit2.Callback
+import io.reactivex.Observable
+import io.reactivex.Single
 import ride.the.bus.muniboys.models.PredictionsModel
 
 /**
@@ -12,7 +13,7 @@ object NextBusApi {
     private val MUNI_AGENCY = "sf-muni"
     private val mService: NextBusService = RetrofitManager.getRetrofit().create(NextBusService::class.java)
 
-    fun getPredictions(callback: Callback<PredictionsModel>) {
-        mService.getPredictions(MUNI_AGENCY, "5", 5390).enqueue(callback)
+    fun getPredictions(): Single<PredictionsModel> {
+        return mService.getPredictions(MUNI_AGENCY, "5", 5390)
     }
 }

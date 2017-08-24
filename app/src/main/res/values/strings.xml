@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MuniBoys</string>
+    <string name="app_name">When is the 5 coming to Divisadero</string>
+    <string name="coming">The next outbound 5 coming to Divisadero is in %1$s minutes.</string>
 </resources>
