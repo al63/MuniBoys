@@ -27,10 +27,9 @@ class BusActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: SingleObserver<PredictionsModel> {
                     override fun onSuccess(response: PredictionsModel) {
-                        response.getClosestPrediction()?.let {
-                            val time = it.minutes
+                        response.getClosestPrediction()?.let { prediction ->
                             mText?.let {
-                                it.text = getString(R.string.coming, time)
+                                it.text = getString(R.string.coming, prediction.minutes)
                             }
                         }
                     }
