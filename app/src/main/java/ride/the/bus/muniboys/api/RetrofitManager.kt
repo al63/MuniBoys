@@ -21,7 +21,6 @@ object RetrofitManager {
         mRetrofit = Retrofit.Builder()
                 .client(client)
                 .baseUrl("http://webservices.nextbus.com/service/")
-                .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(GsonManager.getGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()

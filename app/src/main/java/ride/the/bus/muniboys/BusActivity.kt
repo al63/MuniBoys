@@ -9,7 +9,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ride.the.bus.muniboys.api.NextBusApi
 import ride.the.bus.muniboys.models.PredictionsModel
-import ride.the.bus.muniboys.models.PredictionsModel2
 
 class BusActivity : AppCompatActivity() {
 
@@ -26,8 +25,8 @@ class BusActivity : AppCompatActivity() {
         val single = NextBusApi.getPredictions()
         single.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object: SingleObserver<PredictionsModel2> {
-                    override fun onSuccess(response: PredictionsModel2) {
+                .subscribe(object: SingleObserver<PredictionsModel> {
+                    override fun onSuccess(response: PredictionsModel) {
                         response.getClosestPrediction()?.let { prediction ->
                             mText?.let {
                                 it.text = getString(R.string.coming, prediction.minutes)

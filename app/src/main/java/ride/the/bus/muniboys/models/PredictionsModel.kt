@@ -1,45 +1,73 @@
 package ride.the.bus.muniboys.models
 
+import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
+import ride.the.bus.muniboys.api.GsonManager
+import ride.the.bus.muniboys.api.PostProcess
 
 /**
- * Created by aleclee on 8/6/17.
+ * Created by aleclee on 8/23/17.
  */
+class PredictionsModel(private val mGson: Gson): PostProcess {
 
-data class PredictionsModel(val predictions: Predictions) {
+    constructor(): this(GsonManager.getGson())
 
-    data class Predictions(val direction: List<Direction>, // TODO: wtf not necessarily a list
-                           val agencyTitle: String,
-                           val routeTag: String,
-                           val routeTitle: String,
-                           val stopTag: String,
-                           val stopTitle: String)
+    @SerializedName("predictions") private var mPredictionsWrapper: PredictionsWrapper? = null
+    private var mDirections: List<Direction> = emptyList()
+    private var mPredictions: MutableMap<Direction, List<Prediction>> = mutableMapOf()
 
-    data class Direction(val prediction: List<Prediction>, // TODO: wtf not necessarily a list
+    data class PredictionsWrapper(val direction: JsonElement, // either a Direction or list of Direction
+                                  val agencyTitle: String,
+                                  val routeTag: String,
+                                  val routeTitle: String,
+                                  val stopTag: String,
+                                  val stopTitle: String)
+
+    data class Direction(val prediction: JsonElement, // either a Prediction or list of Prediction
                          val title: String)
 
     data class Prediction(val block: String,
-                         val dirTag: String,
-                         val minutes: String,
-                         val seconds: String,
-                         val isDeparture: Boolean)
+                          val dirTag: String,
+                          val minutes: String,
+                          val seconds: String,
+                          val isDeparture: Boolean)
 
+    override fun postProcess() {
+        // The muni API is insane and doesn't actually give correct types. So instead we have to
+        // take JsonElement's and figure out what the types are after the fact.
+        // direction and prediction are both either lists or objects.
 
-    fun getClosestPrediction(): Prediction? {
-        // for each direction...
-        // get the first prediction
-        // return prediction with smallest minutes
-
-        var bestPrediction: Prediction? = null
-        var bestTime = Integer.MAX_VALUE
-        for ((prediction) in predictions.direction) {
-            val time = prediction.getOrNull(0)?.minutes?.toInt() ?: Integer.MAX_VALUE
-            if (bestTime > time) {
-                bestTime = time
-                bestPrediction = prediction.getOrNull(0)
+        mPredictionsWrapper?.direction?.let { direction ->
+            // convert direction from JsonElement to real list
+            mDirections = if (direction.isJsonArray) {
+                mGson.fromJson(direction, object: TypeToken<List<Direction>>() {}.type)
+            } else {
+                listOf(mGson.fromJson(direction, Direction::class.java))
             }
         }
-        return bestPrediction
+
+        // convert directions list to predictions
+        mDirections.forEach { direction ->
+            mPredictions.put(direction, if (direction.prediction.isJsonArray) {
+                mGson.fromJson(direction.prediction, object: TypeToken<List<Prediction>>(){}.type)
+            } else {
+                listOf(mGson.fromJson(direction.prediction, Prediction::class.java))
+            })
+        }
+    }
+
+    fun getClosestPrediction(): Prediction? {
+        return mPredictions.values.mapNotNull {
+            it.firstOrNull()
+        }.fold(Pair<Int, Prediction?>(Integer.MAX_VALUE, null)) { acc, prediction ->
+            val minutes = prediction.minutes.toInt()
+            if (acc.first > minutes) {
+                Pair<Int, Prediction?>(minutes, prediction)
+            } else {
+                acc
+            }
+        }.second
     }
 }
-
