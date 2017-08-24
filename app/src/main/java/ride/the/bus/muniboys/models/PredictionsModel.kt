@@ -61,13 +61,8 @@ class PredictionsModel(private val mGson: Gson): PostProcess {
     fun getClosestPrediction(): Prediction? {
         return mPredictions.values.mapNotNull {
             it.firstOrNull()
-        }.fold(Pair<Int, Prediction?>(Integer.MAX_VALUE, null)) { acc, prediction ->
-            val minutes = prediction.minutes.toInt()
-            if (acc.first > minutes) {
-                Pair<Int, Prediction?>(minutes, prediction)
-            } else {
-                acc
-            }
-        }.second
+        }.minBy {
+            it.minutes
+        }
     }
 }
