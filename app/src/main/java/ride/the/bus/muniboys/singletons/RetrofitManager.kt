@@ -1,6 +1,5 @@
-package ride.the.bus.muniboys.api
+package ride.the.bus.muniboys.singletons
 
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -19,8 +18,8 @@ object RetrofitManager {
                 .build()
 
         mRetrofit = Retrofit.Builder()
+                .baseUrl("http://webservices.nextbus.com")
                 .client(client)
-                .baseUrl("http://webservices.nextbus.com/service/")
                 .addConverterFactory(GsonConverterFactory.create(GsonManager.getGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()

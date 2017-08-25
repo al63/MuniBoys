@@ -2,6 +2,7 @@ package ride.the.bus.muniboys.api
 
 import io.reactivex.Single
 import ride.the.bus.muniboys.models.PredictionsModel
+import ride.the.bus.muniboys.singletons.RetrofitManager
 
 /**
  * Created by aleclee on 8/6/17.

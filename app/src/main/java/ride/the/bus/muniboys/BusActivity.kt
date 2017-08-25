@@ -10,9 +10,9 @@ import io.reactivex.schedulers.Schedulers
 import ride.the.bus.muniboys.api.NextBusApi
 import ride.the.bus.muniboys.models.PredictionsModel
 
-class BusActivity : AppCompatActivity() {
+class BusActivity: AppCompatActivity() {
 
-    var mText: TextView? = null
+    lateinit var mText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +27,17 @@ class BusActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: SingleObserver<PredictionsModel> {
                     override fun onSuccess(response: PredictionsModel) {
-                        response.getClosestPrediction()?.let { prediction ->
-                            mText?.let {
-                                it.text = getString(R.string.coming, prediction.minutes)
+                        response.getClosestPredictions(5).apply {
+                            mText.text = if (size > 0) {
+                                getString(R.string.coming, joinToString { it.minutes })
+                            } else {
+                                getString(R.string.not_coming)
                             }
                         }
                     }
 
                     override fun onError(e: Throwable) {
-                        mText?.let {
-                            it.text = "dunno"
-                        }
+                        mText.text = getString(R.string.error_coming)
                     }
 
                     override fun onSubscribe(d: Disposable) {

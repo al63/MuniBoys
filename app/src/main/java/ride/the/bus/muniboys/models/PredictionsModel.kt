@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
-import ride.the.bus.muniboys.api.GsonManager
+import ride.the.bus.muniboys.singletons.GsonManager
 import ride.the.bus.muniboys.api.PostProcess
 
 /**
@@ -12,11 +12,11 @@ import ride.the.bus.muniboys.api.PostProcess
  */
 class PredictionsModel(private val mGson: Gson): PostProcess {
 
-    constructor(): this(GsonManager.getGson())
-
     @SerializedName("predictions") private var mPredictionsWrapper: PredictionsWrapper? = null
     private var mDirections: List<Direction> = emptyList()
     private var mPredictions: MutableMap<Direction, List<Prediction>> = mutableMapOf()
+
+    constructor(): this(GsonManager.getGson())
 
     data class PredictionsWrapper(val direction: JsonElement, // either a Direction or list of Direction
                                   val agencyTitle: String,
@@ -58,11 +58,11 @@ class PredictionsModel(private val mGson: Gson): PostProcess {
         }
     }
 
-    fun getClosestPrediction(): Prediction? {
-        return mPredictions.values.mapNotNull {
-            it.firstOrNull()
-        }.minBy {
-            it.minutes
+    fun getClosestPredictions(count:Int=1): List<Prediction> {
+        return mPredictions.values.flatten().sortedWith(Comparator { p1, p2 ->
+            p1.minutes.toInt() - p2.minutes.toInt()
+        }).also {
+            it.subList(0, Math.min(count, it.size))
         }
     }
 }
