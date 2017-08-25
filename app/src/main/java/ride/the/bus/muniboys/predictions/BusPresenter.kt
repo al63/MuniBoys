@@ -17,13 +17,13 @@ class BusPresenter internal constructor(private val mApi: NextBusApi,
                                         private val mViewDelegate: BusViewDelegate,
                                         private val mHandler: Handler) {
 
-    private var mIsActive: Boolean = false
-
     companion object {
         fun create(viewDelegate: BusViewDelegate): BusPresenter {
             return BusPresenter(NextBusApi, viewDelegate, Handler(Looper.getMainLooper()))
         }
     }
+
+    private var mIsActive: Boolean = false
 
     fun onResume() {
         mIsActive = true
