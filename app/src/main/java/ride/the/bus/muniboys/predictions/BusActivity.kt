@@ -19,4 +19,9 @@ class BusActivity: AppCompatActivity() {
         super.onResume()
         mPresenter.onResume()
     }
+
+    override fun onPause() {
+        super.onPause()
+        mPresenter.onPause()
+    }
 }
