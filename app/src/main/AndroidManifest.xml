@@ -15,6 +15,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".predictions.BusActivity"
                   android:configChanges="keyboard|keyboardHidden|screenSize|screenLayout|orientation">
+        </activity>
+
+        <activity android:name=".billing.BillingActivity"
+                  android:configChanges="keyboard|keyboardHidden|screenSize|screenLayout|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
