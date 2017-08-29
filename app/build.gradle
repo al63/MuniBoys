@@ -1,3 +1,5 @@
+import groovy.swing.SwingBuilder
+
 buildscript {
 
     ext {
@@ -41,10 +43,21 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("android.jks")
+            storePassword ""
+            keyAlias "muni-release"
+            keyPassword ""
+        }
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -67,4 +80,36 @@ dependencies {
     // RxJava
     compile 'io.reactivex.rxjava2:rxjava:2.1.2'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+}
+
+task askForPasswords << {
+    // Must create String because input returns char[]
+
+    def storePw = ""
+    def keyPw = ""
+
+    new SwingBuilder().edt {
+        dialog(modal: true, title: 'Enter password', alwaysOnTop: true, resizable: false, locationRelativeTo: null, pack: true, show: true) {
+            vbox { // Put everything below each other
+                label(text: "Please enter store passphrase:")
+                def input1 = passwordField()
+                label(text: "Please enter key passphrase:")
+                def input2 = passwordField()
+                button(defaultButton: true, text: 'OK', actionPerformed: {
+                    storePw = input1.password
+                    keyPw = input2.password
+                    dispose()
+                })
+            }
+        }
+    }
+
+    android.signingConfigs.release.storePassword = new String(storePw)
+    android.signingConfigs.release.keyPassword = new String(keyPw)
+}
+
+tasks.whenTaskAdded { theTask ->
+    if (theTask.name == "packageRelease") {
+        theTask.dependsOn "askForPasswords"
+    }
 }
