@@ -2,43 +2,49 @@ package ride.the.bus.muniboys.billing
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.TextView
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsResponseListener
 import ride.the.bus.muniboys.R
 
 class BillingActivity: AppCompatActivity() {
 
-
     private var mBillingController: BillingController? = null
-    private var mBillingClient: BillingClient? = null
+    private lateinit var mBuyButton: TextView
+    private lateinit var mHistory: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_billing)
-        mBillingController = BillingController(this, object: BillingController.Listener {
-            override fun onPurchasesUpdated(purchaseList: List<Purchase>) {
-                Log.d("billing", "purchases updated")
+        mBuyButton = findViewById(R.id.buy) as TextView
+        mHistory = findViewById(R.id.history) as TextView
+
+        mBuyButton.setOnClickListener {
+            mBillingController?.launchPurchaseFlow("loerl", BillingClient.SkuType.INAPP)
+        }
+
+        mBillingController = BillingController(this, object : BillingController.Listener {
+            override fun onHistoryFetched(purchasesResult: Purchase.PurchasesResult) {
+                var s = "History \n"
+                purchasesResult.purchasesList?.map { purchase ->
+                    s += "${purchase.signature} ${purchase.orderId} ${purchase.purchaseState} ${purchase.signature} ${purchase.purchaseToken}"
+                }
+
+                mHistory.text = s
             }
 
             override fun onConnectionChanged(isConnected: Boolean) {
                 if (isConnected) {
-                    mBillingController?.querySkuDetails(BillingClient.SkuType.INAPP, listOf("loerl"), mSkuDetailsListener)
+                    //mBillingController?.querySkuDetails(BillingClient.SkuType.INAPP, listOf("loerl"), mSkuDetailsListener)
                 }
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
         mBillingController?.active()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         mBillingController?.inactive()
     }
 
