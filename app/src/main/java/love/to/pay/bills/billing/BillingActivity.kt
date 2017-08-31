@@ -21,7 +21,7 @@ class BillingActivity: AppCompatActivity() {
         mHistory = findViewById(R.id.history) as TextView
 
         mBuyButton.setOnClickListener {
-            mBillingController?.launchPurchaseFlow("loerl", BillingClient.SkuType.INAPP)
+            mBillingController?.launchPurchaseFlow("sku_id_here", BillingClient.SkuType.INAPP)
         }
 
         mBillingController = BillingController(this, object : BillingController.Listener {

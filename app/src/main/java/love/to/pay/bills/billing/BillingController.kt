@@ -58,7 +58,7 @@ class BillingController(private val mActivity: Activity,
                         handlePurchasesUpdated(inappPurchases.purchasesList)
                     }
 
-                    // query purchase history // TODO: can be used to verify with server
+                    // query purchase history TODO: can be used to verify with server
                     mBillingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP) { result ->
                         if (result.responseCode == BillingClient.BillingResponse.OK) {
                             mListener.onHistoryFetched(result)
@@ -94,8 +94,8 @@ class BillingController(private val mActivity: Activity,
     }
 
     private fun handlePurchasesUpdated(purchaseList: List<Purchase>) {
-        // TODO: am i actually supposed to be consuming each time like this?
         purchaseList.forEach {
+            // TODO: might not want to necessarily consume purchases immediately
             consume(it.purchaseToken, ConsumeResponseListener { purchaseToken, resultCode ->
                 if (resultCode == BillingClient.BillingResponse.OK) {
                     Log.d("billing", "consumed")
