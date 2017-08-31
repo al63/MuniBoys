@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ride.the.bus.muniboys">
+          package="love.to.pay.bills">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.android.vending.BILLING" />
@@ -13,11 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".predictions.BusActivity"
-                  android:configChanges="keyboard|keyboardHidden|screenSize|screenLayout|orientation">
-        </activity>
-
-        <activity android:name=".billing.BillingActivity"
+        <activity android:name="love.to.pay.bills.billing.BillingActivity"
                   android:configChanges="keyboard|keyboardHidden|screenSize|screenLayout|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

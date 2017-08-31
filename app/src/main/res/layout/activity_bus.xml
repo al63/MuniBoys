@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="ride.the.bus.muniboys.predictions.BusActivity">
+    tools:context="love.to.pay.bills.predictions.BusActivity">
 
     <TextView
         android:id="@+id/text"

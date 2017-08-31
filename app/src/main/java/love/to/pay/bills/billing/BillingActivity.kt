@@ -1,4 +1,4 @@
-package ride.the.bus.muniboys.billing
+package love.to.pay.bills.billing
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.widget.TextView
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetailsResponseListener
-import ride.the.bus.muniboys.R
+import love.to.pay.bills.R
 
 class BillingActivity: AppCompatActivity() {
 

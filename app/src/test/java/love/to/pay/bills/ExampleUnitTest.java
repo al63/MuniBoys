@@ -1,4 +1,4 @@
-package ride.the.bus.muniboys;
+package love.to.pay.bills;
 
 import org.junit.Test;
 

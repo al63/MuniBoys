@@ -1,4 +1,4 @@
-package ride.the.bus.muniboys;
+package love.to.pay.bills;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
