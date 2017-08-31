@@ -2,6 +2,7 @@ package love.to.pay.bills.billing
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
@@ -35,9 +36,7 @@ class BillingActivity: AppCompatActivity() {
             }
 
             override fun onConnectionChanged(isConnected: Boolean) {
-                if (isConnected) {
-                    //mBillingController?.querySkuDetails(BillingClient.SkuType.INAPP, listOf("loerl"), mSkuDetailsListener)
-                }
+                mBuyButton.visibility = if (isConnected) View.VISIBLE else View.GONE
             }
         })
         mBillingController?.active()
@@ -46,13 +45,6 @@ class BillingActivity: AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mBillingController?.inactive()
-    }
-
-    private var mSkuDetailsListener = SkuDetailsResponseListener { result ->
-        result.skuDetailsList.forEach {  skuDetail ->
-            // TODO
-        }
-
     }
 }
 
